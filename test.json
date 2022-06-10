@@ -1,0 +1,17 @@
+[
+    {
+		"userId": "张三",
+		"passwd": "513513",
+        "priority":0
+	},
+	{
+		"userId": "李四",
+		"passwd": "513513",
+        "priority":1
+	},
+	{
+		"userId": "王五",
+		"passwd": "513513",
+        "priority":2
+	}
+]
