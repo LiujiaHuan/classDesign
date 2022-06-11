@@ -10,24 +10,32 @@
 <title>Demo</title>
 </head>
 <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<body>
+    <div id="divframe">
+        <div class="loadTitle">
 
+        </div>
+        <div id="jsonTip"></div>
+    </div>
+</body>
 
     <div id="login-box">
-        <h1 id="login-font">Login</h1>
+        <h1 id="login-font">用户注册</h1>
+        <form action="./register.php" method="get">
         <div class="form">
             <div class="item">
                 <i class="fa fa-user-circle-o" aria-hidden="true"></i>
-                <input type="text" placeholder="Username" id="login-font">
+                <input type="text" placeholder="Username" id="login-font" name="userId">
             </div>
             <div class="item">
                 <i class="fa fa-key" aria-hidden="true"></i>
-                <input type="text" placeholder="Password" id="login-font">
+                <input type="text" placeholder="Password" id="login-font" name="passwd">
             </div>
         </div>
-        <button type="submit" id="submit_info">Login</button>
-        <button type="submit" id="go_register"><a href="./register.html">register</button>
+        <button type="submit" id="go_register">register</button>
+        </form>
     </div>
-<script type="application/javascript" src="./login.js"></script>
+<script type="application/javascript" src="./register.js"></script>
 <body>
 </body>
 </html>
