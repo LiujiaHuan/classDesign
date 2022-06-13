@@ -12,7 +12,16 @@ typedef struct userInfo{
     int priority;
 }userInfo;
 
+typedef struct userAffair{
+    char *time;
+    char *affair;
+}userAffair;
 
+typedef struct affairList{
+    struct affairList* next;
+    struct affairList* pre;
+    userAffair* current;
+}affairList;
 
 //userInfoList 用户信息的链表 data指向用户信息结构体
 typedef struct userInfoList{
@@ -33,6 +42,16 @@ userInfoList* createUINode(){
 }
 
 
+/*创建一个AffairList的Node*/
+affairList* createUALnode(){
+    affairList* temp = (affairList*)malloc(sizeof(affairList));
+    temp->current = NULL;
+    temp->next = NULL;
+    temp->pre = NULL;
+    return temp;
+}
+
+
 
 /*创建一个UserInfo结构体*/
 userInfo* createUserInfo(char *name,char *passwd,int priority){
@@ -44,15 +63,18 @@ userInfo* createUserInfo(char *name,char *passwd,int priority){
 }
 
 
+userAffair* createAffair(char *time,char *affair){
+    userAffair* Temp = (userAffair*)malloc(sizeof(userAffair));
+    Temp->time = time;
+    Temp->affair = affair;
+    return Temp;
+}
+
 
 /*为userInfoList每一个User维护一个json文件存放事务*/
 void createFile(char* name){
-    char path[20]="./jsonFile/";
-    char temp[]=".json";
     FILE *fp;
-    strcat(path,name);
-    strcat(path,temp);
-    if((fp=fopen(path,"w"))==NULL) /*建立新文件 */
+    if((fp=fopen(name,"w"))==NULL) /*建立新文件 */
     {
         printf("cannot open file\n"); /*建立新文件出错误信息*/
         exit(1); /*终止调用过程、关闭所有文件*/
@@ -96,16 +118,39 @@ userInfoList* initUserInfoList(){
 };
 
 
+/*初始化一个AffairList*/
+affairList* initAffairList(){
+    affairList* beginNode = createUALnode();
+    return beginNode;
+};
+
 
 /*给userInfoList尾插新节点*/
 userInfoList* appendUserInfo(userInfoList* L,userInfo* newInfo){
     // printf("222\n");
     userInfoList* root = L;//保存一下根节点 一会return回去
     while(L->next != NULL){
-        printf("111\n");
+        //printf("111\n");
         L = L->next;    //遍历到存有数据的最后一个节点
     }
     userInfoList* newNode = createUINode();
+    L->next = newNode;
+    newNode->current = newInfo;
+    newNode->next = NULL;
+    newNode->pre = L;
+    return root;
+}
+
+
+/*给affairList尾插新节点*/
+affairList* appendAffairList(affairList* L, userAffair* newInfo){
+    // printf("222\n");
+    affairList* root = L;//保存一下根节点 一会return回去
+    while(L->next != NULL){
+        //printf("111\n");
+        L = L->next;    //遍历到存有数据的最后一个节点
+    }
+    affairList* newNode = createUALnode();
     L->next = newNode;
     newNode->current = newInfo;
     newNode->next = NULL;
@@ -125,22 +170,29 @@ void iterUserInfoList(userInfoList* L){
 }
 
 
+/*遍历user AffairList表*/
+void iterAffairList(affairList* L){
+    L = L->next;
+    while(L!=NULL){
+        printf("time: %s affair:  %s \n",L->current->time, L->current->affair);
+        L = L->next;
+    }
+}
+
+
 
 /* 初始化读取并维护一个userInfoList链表*/
-void initUserInfo(){
+userInfoList* initUserInfo(){
     userInfoList* L = initUserInfoList();
     // if(L->next==NULL){
     //     printf("?????");
     // }
-    char*message = getFileAll("./user.json");
+    char* message = getFileAll("./user.json");
 
     cJSON* cjson_test = NULL;
     cJSON* cjson_userId = NULL;
     cJSON* cjson_passwd = NULL;
     cJSON* cjson_priority = NULL;
-    cJSON* cjson_address_country = NULL;
-    cJSON* cjson_address_zipcode = NULL;
-    cJSON* cjson_skill = NULL;
     int    skill_array_size = 0, i = 0;
     cJSON* cjson_skill_item = NULL;
 
@@ -163,7 +215,7 @@ void initUserInfo(){
     /* 解析数组 */
 
     skill_array_size = cJSON_GetArraySize(cjson_test);
-    printf("%d",skill_array_size);
+    //printf("%d",skill_array_size);
     for(i = 0; i < skill_array_size; i++)
     {
         cjson_skill_item = cJSON_GetArrayItem(cjson_test, i);
@@ -174,37 +226,122 @@ void initUserInfo(){
         //根据json文件创建新的userInfo
         userInfo* newUserInfo = createUserInfo(cjson_userId->valuestring, cjson_passwd->valuestring, cjson_priority->valueint);
         L = appendUserInfo(L, newUserInfo);     //根据json解析数据添加节点 
-        createFile(cjson_userId->valuestring);
+        //createFile(cjson_userId->valuestring);
     }
-    iterUserInfoList(L);
+    //iterUserInfoList(L);
+    return L;
 };
 
 
+//初始化 UserAffair表
+affairList* initUserAffair(userInfo* U){
+    char path[20] = "./jsonFile/";
+    strcat(path, U->userName);
+    strcat(path, ".json");
+    char* fileContent = getFileAll(path);
+    affairList* L = initAffairList();
 
-void userLogin(){
 
+    cJSON* cjson_test = NULL;
+    cJSON* cjson_time = NULL;
+    cJSON* cjson_affair = NULL;
+    int    skill_array_size = 0, i = 0;
+    cJSON* cjson_skill_item = NULL;
+
+    /* 解析整段JSON数据 */
+    cjson_test = cJSON_Parse(fileContent);
+    if(cjson_test == NULL)
+    {
+        printf("parse fail.\n");
+        return -1;
+    }
+
+    if(!cjson_test) {
+        printf("no json\n");
+        return -1;
+    }
+    if (!cJSON_IsArray(cjson_test)){
+        printf("no Array\n");
+        return -1;
+    }
+    /* 解析数组 */
+
+    skill_array_size = cJSON_GetArraySize(cjson_test);
+    printf("%d",skill_array_size);
+    for(i = 0; i < skill_array_size; i++){
+        cjson_skill_item = cJSON_GetArrayItem(cjson_test, i);
+            /* 依次根据名称提取JSON数据（键值对） */
+        cjson_time = cJSON_GetObjectItem(cjson_skill_item, "time");
+        cjson_affair = cJSON_GetObjectItem(cjson_skill_item, "affair");
+        //根据json文件创建新的userInfo
+        userAffair* newAffair = createAffair(cjson_time->valuestring, cjson_affair->valuestring);
+        L = appendAffairList(L, newAffair);     //根据json解析数据添加节点 
+
+    }
+    return L;
+};
+
+void listenLog(affairList* List,char* path){
+
+}
+
+//检查用户登录，并根据用户json文件初始化用户affair链表,然后开始监听log进行操作
+void userLogin(char* userName, char* passwd, userInfoList* L){
+    int flag = 0;
+    L = L->next;
+    while(L!=NULL){
+        if(!strcmp(L->current->userName, userName) && !strcmp(L->current->userPasswd, passwd)){
+            printf("登陆成功！欢迎%s\n",userName);
+            flag = 1;
+            break;
+        }
+        L = L->next;
+    }
+    if(!flag){
+        printf("密码错误！");
+        return;
+    }
+    affairList* userAffair = initUserAffair(L->current);
+    char path[20] = "log";
+    while(1){
+        listenLog(userAffair, path);
+    }
+    
 }
 
 
 void userRegister(){
     char name[20]={0},passwd[20]={0};
-    printf("ok，请输入你的用户名称\n");
-    printf("ok，请输入你的密码\n");
-    printf("ok，请确认你的密码\n");
+    printf("ok 请输入你的用户名称\n");
+    printf("ok 请输入你的密码\n");
+    printf("ok 请确认你的密码\n");
 }
 
 
 int main(){
-    initUserInfo();
-    int funcFlag;
-    printf("你要干什么？1是注册奥\n");
-    scanf("%d",&funcFlag);
-    if(funcFlag>5 || funcFlag<0){
-        printf("error");
-        exit(1);
-    }
-    switch(funcFlag){
-        case 1:
-            userRegister();
+    createFile("./log.txt");
+    int flag = 0 ;
+    char userName[20], passwd[20];
+    userInfoList* userInfoList = initUserInfo();
+    iterUserInfoList(userInfoList);
+
+    while(!flag){
+        int funcFlag;
+        printf("你要干什么? 1是注册奥 2是登录\n");
+        scanf("%d",&funcFlag);
+        if(funcFlag>5 || funcFlag<0){
+            printf("error");
+            exit(1);
+        }
+        switch(funcFlag){
+            case 1:
+                userRegister();
+            case 2:
+                printf("请输入你的用户名！\n");
+                scanf("%s",&userName);
+                printf("请输入你的密码\n");
+                scanf("%s",&passwd);
+                userLogin(userName, passwd, userInfoList);
+        }
     }
 }
