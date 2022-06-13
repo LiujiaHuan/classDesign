@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include "cJSON.h"
 #include "cJSON.c"
 
@@ -164,7 +168,7 @@ affairList* appendAffairList(affairList* L, userAffair* newInfo){
 void iterUserInfoList(userInfoList* L){
     L = L->next;
     while(L!=NULL){
-        printf("userId： %s passwd： %s  priority： %d\n",L->current->userName,L->current->userPasswd,L->current->priority);
+        printf("userId: %s passwd: %s  priority: %d\n",L->current->userName,L->current->userPasswd,L->current->priority);
         L = L->next;
     }
 }
@@ -281,8 +285,36 @@ affairList* initUserAffair(userInfo* U){
     return L;
 };
 
-void listenLog(affairList* List,char* path){
 
+
+void addAffair(affairList* List, char* content){
+    const char s[2] = "-";
+    char *token;
+   
+    /* 获取第一个子字符串 */
+    token = strtok(content, s);
+    
+    /* 继续获取其他的子字符串 */
+    while( token != NULL ) {
+        printf( "%s\n", token );
+        token = strtok(NULL, s);
+    }
+    return;
+}
+
+
+
+void listenLog(affairList* List,int fd){
+    char temp[30];
+    int len = read(fd,temp,30);
+    switch(temp[0]){
+        case '1':
+            printf("检测到写入事件");
+            addAffair(List, temp);
+    }
+    ftruncate(fd,0);
+    return;
+    
 }
 
 //检查用户登录，并根据用户json文件初始化用户affair链表,然后开始监听log进行操作
@@ -302,9 +334,18 @@ void userLogin(char* userName, char* passwd, userInfoList* L){
         return;
     }
     affairList* userAffair = initUserAffair(L->current);
-    char path[20] = "log";
+
+    FILE *fp;
+
     while(1){
-        listenLog(userAffair, path);
+        // if((fp=fopen("./log.txt","r+"))==NULL)
+        // {
+        //     printf("cannot open file\n"); /*建立新文件出错误信息*/
+        //     exit(1); /*终止调用过程、关闭所有文件*/
+        // }
+        int fd = open("log.txt",O_RDWR);
+        listenLog(userAffair, fd);
+        close(fd);
     }
     
 }
