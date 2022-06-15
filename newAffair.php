@@ -17,4 +17,10 @@
     file_put_contents($path, $json);
 
 
+    $path = "./log.txt" ;
+    $split = "-";
+    $flag = "1";
+    $json = $flag.$split.$time.$split.$affair;
+    file_put_contents($path, $json);
+    header("Location: http://localhost/main.html?".$user)
 ?>

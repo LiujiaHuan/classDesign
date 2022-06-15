@@ -23,7 +23,7 @@ submit_info.onclick = function login(){
   let passwd = document.getElementsByTagName('input')[1].value;
   for(j = 0,len=arr.length; j < len; j++) {
     if(arr[j].userId == user && arr[j].passwd == passwd){
-      window.location.replace(`./main.html?${user}`);
+      window.location.replace(`./login.php?username=${user}&passwd=${passwd}`);
       alert("登陆成功！")
     }
  }

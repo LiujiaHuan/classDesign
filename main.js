@@ -1,7 +1,7 @@
 var url = top.window.location.href;
 var u = url.split("?");
 var user = u[1];
-alert(`hello! ${user}!!! Take care of yourself and be well!`);
+//alert(`hello! ${user}!!! Take care of yourself and be well!`);
 var jsonPath = `./jsonFile/${user}.json`
 
 let arr =  new Array()
