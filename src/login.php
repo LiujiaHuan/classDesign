@@ -2,7 +2,7 @@
     $param = $_SERVER['QUERY_STRING'];
     parse_str($param);
     
-    $path = "./log.txt" ;
+    $path = "../log.txt" ;
     $split = "-";
     $flag = "l";
     $json = $flag.$split.$username.$split.$passwd;

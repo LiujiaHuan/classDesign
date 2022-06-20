@@ -1,11 +1,11 @@
 <?php
-    $time = $_GET['time'];//用户名
-    $affair = $_GET['affair'];//密码
+    $time = $_GET['time'];//时间
+    $affair = $_GET['affair'];//事件
    
     $url = parse_url($_SERVER['HTTP_REFERER']);
     $user = $url[query];
 
-    $path = "./jsonFile/{$user}.json" ;
+    $path = "../jsonFile/{$user}.json" ;
     $json_string = file_get_contents($path);
     //echo $path;
     $data = json_decode($json_string, true);
@@ -17,7 +17,7 @@
     file_put_contents($path, $json);
 
 
-    $path = "./log.txt" ;
+    $path = "../log.txt" ;
     $split = "-";
     $flag = "1";
     $json = $flag.$split.$time.$split.$affair;

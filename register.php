@@ -9,16 +9,13 @@
     $json = json_encode($data);
     //var_dump($data);
     file_put_contents('user.json', $json);
+
+
+    $path = "./log.txt" ;
+    $split = "-";
+    $flag = "r";
+    $json = $flag.$split.$name.$split.$pwd;
+    file_put_contents($path, $json);
     header("Location: ./register.html")
-    // class userInfo {
-    //     public $userId = "";
-    //     public $passwd  = "";
-    //     public $priority = 10;
-    // }
-    // $info = new userInfo();
-    // $info->userId = $name;
-    // $info->passwd  = $pwd;
-    // $json = json_encode($info);
-    
-    // file_put_contents('user.json', $json);
+
 ?>
