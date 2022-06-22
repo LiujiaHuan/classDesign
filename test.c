@@ -73,7 +73,11 @@ userAffair *createAffair(char *time, char *affair)
     userAffair *Temp = (userAffair *)malloc(sizeof(userAffair));
     Temp->time = time;
     Temp->affair = affair;
+<<<<<<< HEAD
+    // printf("create Affair %s %s \n", Temp->affair, Temp->time);
+=======
     printf("create Affair %s %s \n", Temp->affair, Temp->time);
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
     return Temp;
 }
 
@@ -181,9 +185,9 @@ affairList *appendAffairList(affairList *L, userAffair *newInfo)
     newNode->next = NULL;
     newNode->pre = root;
 
-    printf("-------------\n");
-    iterAffairList(L);
-    printf("--------------\n");
+    // printf("-------------\n");
+    // iterAffairList(L);
+    // printf("--------------\n");
     return L;
 }
 
@@ -246,7 +250,10 @@ userInfoList *initUserInfo()
         //根据json文件创建新的userInfo
         userInfo *newUserInfo = createUserInfo(cjson_userId->valuestring, cjson_passwd->valuestring, cjson_priority->valueint);
         L = appendUserInfo(L, newUserInfo); //根据json解析数据添加节点
+<<<<<<< HEAD
+=======
         // createFile(cjson_userId->valuestring);
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
     }
     // iterUserInfoList(L);
     return L;
@@ -261,7 +268,11 @@ affairList *initUserAffair(userInfo *U)
     char *fileContent = getFileAll(path);
     affairList *L = initAffairList();
 
+<<<<<<< HEAD
+    printf("**解析 %s.json **\n", U->userName);
+=======
     printf("解析 %s.json ", U->userName);
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
     cJSON *cjson_test = NULL;
     cJSON *cjson_time = NULL;
     cJSON *cjson_affair = NULL;
@@ -300,6 +311,7 @@ affairList *initUserAffair(userInfo *U)
         userAffair *newAffair = createAffair(cjson_time->valuestring, cjson_affair->valuestring);
         L = appendAffairList(L, newAffair); //根据json解析数据添加节点
     }
+    printf("///解析成功///\n");
     return L;
 };
 
@@ -409,7 +421,11 @@ void userLogin(char *userName, char *passwd, userInfoList *L, int fflag)
 
         if (temp[0] == '1')
         {
+<<<<<<< HEAD
+            printf("***检测到新增事件***\n", temp);
+=======
             printf("***检测到新增事件***%s\n", temp);
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
             token = strtok(temp, s);
             token = strtok(NULL, s);
             time = (char *)malloc(sizeof(token));
@@ -483,22 +499,37 @@ int main()
     createFile("./log.txt");
     int flag = 0;
     userInfoList *user = initUserInfo();
+<<<<<<< HEAD
+    printf("**欢迎使用生活日程管理系统**\n");
+    printf("------以下为已注册用户列表-------\n");
+=======
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
     iterUserInfoList(user);
     
 
+<<<<<<< HEAD
+    //链表写回测试
+
+    printf("请输入运行方式:\n0 纯后端模式\n1 前后端分离模式\n您选择:");
+=======
     
     
     //链表写回测试
     
     
     printf("请输入运行方式 0 纯后端 1 前后端分离");
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
     scanf("%d", &flag);
     while (!flag)
     {
         char userName[20], passwd[20], name[10] = {0};
         char *Name, *Passwd;
         int funcFlag;
+<<<<<<< HEAD
+        printf("接下来想做什么?\n ----------1 注册 2 登录 3 查看全部用户名单 4 删除用户---------------\n");
+=======
         printf("你要干什么?\n ----------1是注册奥 2是登录 3查看全部用户名单 4删除用户---------------\n");
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
         scanf("%d", &funcFlag);
         if (funcFlag > 5 || funcFlag < 0)
         {
@@ -524,7 +555,11 @@ int main()
             userInfo *new = createUserInfo(Name, Passwd, 10);
             //用户链表追加节点 保存用户信息（user->current指向用户信息结构体）
             user = appendUserInfo(user, new);
+<<<<<<< HEAD
+            printf("-----------注册成功--------------\n");
+=======
             printf("-----------注册成功--------------");
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
             break;
 
         //登录
@@ -581,6 +616,40 @@ int main()
     while (flag)
     {
         printf("---Listening---\n");
+<<<<<<< HEAD
+        char *username, *passWd, *token, temp[30] = {0};
+        const char s[2] = "-";
+        int fd = open("log.txt", O_RDWR);
+        int len = read(fd, temp, 30);
+
+        switch (temp[0])
+        {
+        case 'l':
+            printf("检测到登录事件\n");
+            token = strtok(temp, s); //操作"位”
+            token = strtok(NULL, s); // user 信息
+            username = token;
+            token = strtok(NULL, s); // passwd信息
+            passWd = token;
+            printf("username: %s passwd %s\n", username, passWd);
+            ftruncate(fd, 0);
+            close(fd);
+
+            //进入login状态   开始下一阶段循环
+            userLogin(username, passWd, user, 0);
+            break;
+        case 'r':
+            printf("***检测到注册事件***\n");
+            token = strtok(temp, s);
+            token = strtok(NULL, s);
+            username = (char *)malloc(sizeof(token));
+            memcpy(username, token, sizeof(token));
+
+            token = strtok(NULL, s); // passwd信息
+            passWd = (char *)malloc(sizeof(token));
+            memcpy(passWd, token, sizeof(token));
+
+=======
         char *username,*passWd,*token,temp[30] = {0};
         const char s[2] = "-";
         int fd = open("log.txt", O_RDWR);
@@ -612,6 +681,7 @@ int main()
             passWd = (char *)malloc(sizeof(token));
             memcpy(passWd, token, sizeof(token));
 
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b
             userInfo *new = createUserInfo(username, passWd, 10);
             appendUserInfo(user, new);
             printf("注册成功，当前用户列表为：\n");

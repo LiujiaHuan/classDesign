@@ -1,7 +1,7 @@
 let arr = new Array();
 
 //获取json文件 将user和passwd解析
-$.getJSON("./user.json", function (data) {
+$.getJSON("../user.json", function (data) {
   $.each(data, function (infoIndex, info) {
     let userInfo = {
       userId: "",
@@ -25,7 +25,7 @@ submit_info.onclick = function login() {
   for (j = 0, len = arr.length; j < len; j++) {//遍历
     if (arr[j].userId == user && arr[j].passwd == passwd) {
       //比较成功 进行跳转 本js文件生命周期结束
-      window.location.replace(`./src/login.php?username=${user}&passwd=${passwd}`);
+      window.location.replace(`./login.php?username=${user}&passwd=${passwd}`);
       alert("登陆成功！");
       flag = 1;
     }

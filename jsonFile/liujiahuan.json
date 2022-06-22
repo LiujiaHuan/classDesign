@@ -1,1 +1,14 @@
+<<<<<<< HEAD
+[
+    {
+        "time": "13:00",
+        "affair": "eating"
+    },
+    {
+        "time": "14:00",
+        "affair": "sleeping"
+    }
+]
+=======
 [{"time":"13:00","affair":"eating"},{"time":"14:00","affair":"sleeping"}]
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b

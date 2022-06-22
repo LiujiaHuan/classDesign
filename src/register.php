@@ -11,7 +11,11 @@
     file_put_contents('user.json', $json);
 
 
+<<<<<<< HEAD:src/register.php
+    $path = "../log.txt" ;
+=======
     $path = "./log.txt" ;
+>>>>>>> b175b0198df5cb79f1c136162c92b1afdc0be83b:register.php
     $split = "-";
     $flag = "r";
     $json = $flag.$split.$name.$split.$pwd;
